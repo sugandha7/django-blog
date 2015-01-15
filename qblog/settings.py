@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'markdown_deux',
     'pagedown',
     'blog',
+    'gunicorn',
 )
 
 MIDDLEWARE_CLASSES = (
