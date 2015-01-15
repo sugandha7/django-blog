@@ -86,7 +86,7 @@ DATABASES = {
     }
 }
 
-DATABASE_PORT = '5433'
+#DATABASE_PORT = '5433'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
