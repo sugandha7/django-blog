@@ -2,44 +2,26 @@
 <head>
         {{ form.media }}
 </head>
-<h2>{{ post.title }}</h2>
+<a href="{% url 'blog' %}">Home</a>
+<div class="title"><h2>{{ post.title }}</h2></div>
+                <ul>
+                    <div class="time" style="font-size:10px">{{ post.created_on}}</div>
+                    <div class="body">{{ post.text|linebreaks }}</div>
+                </ul>
+                {% if post.comment_set.all %}
+                       
+                     <p><b>Comments:</b></p>
+                     <ul>
+                    {% for comment in post.comment_set.all %}
+                    
+                        <div class="comment">
+                        <div class="time" style="font-size:10px">{{ comment.created_on }} | <a href="{{ comment.website }}">{{ comment.name }}</a></div>
+                        <div class="body">{{ comment.text|markdown }}</div>
+                        </div>
+                    
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                <a href="{% url 'blog_add_comment' slug=post.slug %}">Add comment</a>
 
-<div class="content">
-    <p>
-        {{ post.text }}
-    </p>
-    <span>
-        Written by {{ post.author }}  on {{ post.created_on }}
-    </span>
-</div>
-
-{% if post.comment_set.all %}
-<h2>Comments</h2>
-<div class="comments">
-    {% for comment in post.comment_set.all %}
-        <span>
-            <a href="{{ comment.website }}">{{ comment.name }}</a> said on {{ comment.created_on }}
-        </span>
-        <p>
-            {{ comment.text|markdown }}
-        </p>
-    {% endfor %}
-</div>
-{% endif %}
-
-<br />
-
-<h2>Add Comment</h2>
-
-<form action="" method="POST">
-    {% csrf_token %}
-    <table>
-        <!--{{form.name}}
-        {{form.email}}
-        {{form.text}}-->
-        <!--{{ form.as_table }}-->
-        {{form}}
-    </table>
-    <input type="submit" name="submit" value="Submit" />
-</form>
 

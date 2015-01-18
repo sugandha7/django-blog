@@ -1,0 +1,18 @@
+{% load markdown_deux_tags %}
+<head>
+        {{ form.media }}
+</head>
+<a href="{% url 'blog' %}">Home</a>
+<h2>Add Comment</h2>
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <table>
+        <!--{{form.name}}
+        {{form.email}}
+        {{form.text}}-->
+        <!--{{ form.as_table }}-->
+        {{form.as_table}}
+    </table>
+    <input type="submit" name="submit" value="Submit" />
+</form>
