@@ -11,17 +11,38 @@
                 {% if post.comment_set.all %}
                        
                      <p><b>Comments:</b></p>
+                     <form action="{% url 'blog_delete_all_comments' post.slug %}" method="POST">
+                        {% csrf_token %}
                      <ul>
                     {% for comment in post.comment_set.all %}
                     
                         <div class="comment">
                         <div class="time" style="font-size:10px">{{ comment.created_on }} | <a href="{{ comment.website }}">{{ comment.name }}</a></div>
                         <div class="body">{{ comment.text|markdown }}</div>
+                        {% if user.is_staff %}
+                            <input type="checkbox" name="delete" value="{{ comment.pk }}">
+                            <a href="{% url 'blog_delete_comment' post.slug comment.id %}">delete</a>
+                        {% endif %}
                         </div>
                     
                     {% endfor %}
                     </ul>
+                    {% if user.is_staff %}
+                        <p><input type="submit" value="Delete all selected"></p>
+                        <br />
+                    {% endif %}
+                    </form>
                 {% endif %}
-                <a href="{% url 'blog_add_comment' slug=post.slug %}">Add comment</a>
+
+                <p><b>Add Comment</b></p>
+
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <table>
+                    {{form.as_table}}
+                    </table>
+                <input type="submit" name="submit" value="Submit" />
+                </form>
+                
 
 

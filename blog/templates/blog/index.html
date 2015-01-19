@@ -3,20 +3,39 @@
 <head>
         {{ form.media }}
 </head>
+{% block sidebar %}
+    <style type="text/css">
+        #sidebar { float: right; border: 1px dotted #ccc; padding: 4px; }
+        a { margin-left: 15px; }
+    </style>
+    <div id="sidebar">
+        Monthly Archive
+        <p>
+        {% for month in months %}
+            {% ifchanged month.0 %} {{ month.0 }} <br /> {% endifchanged %}
+            <a href="{% url 'blog_month' month.0 month.1 %}">{{ month.2 }}</a> <br />
+        {% endfor %}
+        </p>
+    </div>
+{% endblock %}
+
 
 {% block content %}
     <div class="main">
-
+        {% if archive %}
+        <a href="{% url 'blog' %}">Home</a>
+        {% endif %}
         <!-- Posts  -->
         <ul>
-            {% for post in posts %}
+            {% for post in post_list %}
                 <div class="title"><h2>{{ post.title }}</h2></div>
                 <ul>
                     <div class="time" style="font-size:10px">{{ post.created_on}}</div>
                     <div class="body">{{ post.text|linebreaks }}</div>
                 </ul>
-                {% if post.comment_set.all %}
-                       
+                
+                       <a href="{% url 'blog_post_detail' slug=post.slug %}">Comments ({{ post.comment_set.count }})</a>
+                       <!--{% if post.comment_set.all %}
                      <p><b>Comments:</b></p>
                      <ul>
                     {% for comment in post.comment_set.all %}
@@ -28,15 +47,14 @@
                     
                     {% endfor %}
                     </ul>
-                {% endif %}
-                <a href="{% url 'blog_add_comment' slug=post.slug %}">Add comment</a>
+                {% endif %}-->
 
             </br>
             {% endfor %}
         </ul>
 
         <!-- Next/Prev page links  -->
-        {% if posts and posts.paginator.num_pages > 1 %}
+        {% if not archive and posts.object_list and posts.paginator.num_pages > 1 %}
         <div class="pagination" style="margin-top: 20px; margin-left: 20px; ">
             <span class="step-links">
                 {% if posts.has_previous %}

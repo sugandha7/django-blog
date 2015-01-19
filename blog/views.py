@@ -5,9 +5,11 @@ from django.views.generic.dates import MonthArchiveView
 from django.views.generic.dates import WeekArchiveView
 from django.views.generic.list import ListView
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-
-
-from models import Post
+import time
+from calendar import month_name
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from models import Post, Comment
 from forms import PostForm, CommentForm
 
 def home(request):
@@ -26,8 +28,10 @@ def home(request):
     except (InvalidPage, EmptyPage):
         posts = paginator.page(paginator.num_pages)
 
-    context_dict = {'posts': posts, 'user': request.user}
-    return render_to_response('blog/index.html', context_dict, context_instance=RequestContext(request))
+    #context_dict = {'posts': posts, 'user': request.user}
+    return render_to_response("blog/index.html", dict(posts=posts, user=request.user,
+                                                post_list=posts.object_list, months=mkmonth_lst()))
+    #return render_to_response('blog/index.html', context_dict, context_instance=RequestContext(request))
 
 @user_passes_test(lambda u: u.is_superuser)
 def add_post(request):
@@ -43,15 +47,6 @@ def add_post(request):
 
 def view_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
-
-    return render_to_response('blog/blog_post.html',
-                              {
-                                  'post': post,
-                                  },
-                              context_instance=RequestContext(request))
-
-def add_comment(request, slug):
-    post = get_object_or_404(Post, slug=slug)
     form = CommentForm(request.POST or None)
     
     if form.is_valid():
@@ -65,27 +60,21 @@ def add_comment(request, slug):
     form.initial['name'] = request.session.get('name')
     form.initial['email'] = request.session.get('email')
     form.initial['website'] = request.session.get('website')
-    return render_to_response('blog/add_comment.html',
-                              {
-                                  'form': form,
+    return render_to_response('blog/blog_post.html',
+                              {   'form': form, 
+                                  'post': post,
                                   },
                               context_instance=RequestContext(request))
-def post_list(request, page=0, paginate_by=3):
 
-    return ListView.as_view(
-        request,
-        queryset=Post.objects.all(),
-        paginate_by=paginate_by,
-        page=page
-    )
+def delete_comment(request, slug, pk=None):
+    """Delete comment(s) with primary key `pk` or with pks in POST."""
+    if request.user.is_staff:
+        if not pk: pklst = request.POST.getlist("delete")
+        else: pklst = [pk]
 
-class PostMonthArchiveView(MonthArchiveView):
-    queryset = Post.objects.all()
-    date_field = "created_on"
-    make_object_list = True
-    allow_future = True
-    month_format='%m'
-    template_name='blog/post_archive_month.html'
+        for pk in pklst:
+            Comment.objects.get(pk=pk).delete()
+        return HttpResponseRedirect(reverse("blog_post_detail", args=[slug]))
 
 class PostWeekArchiveView(WeekArchiveView):
     queryset =Post.objects.all()
@@ -94,3 +83,30 @@ class PostWeekArchiveView(WeekArchiveView):
     week_format = "%W"
     allow_future = True
     template_name='blog/post_archive_week.html'
+
+def mkmonth_lst():
+    """Make a list of months to show archive links."""
+    if not Post.objects.count(): return []
+
+    # set up vars
+    year, month = time.localtime()[:2]
+    first = Post.objects.order_by("created_on")[0]
+    fyear = first.created_on.year
+    fmonth = first.created_on.month
+    months = []
+
+    # loop over years and months
+    for y in range(year, fyear-1, -1):
+        start, end = 12, 0
+        if y == year: start = month
+        if y == fyear: end = fmonth-1
+
+        for m in range(start, end, -1):
+            months.append((y, m, month_name[m]))
+    return months
+
+def month(request, year, month):
+    """Monthly archive."""
+    posts = Post.objects.filter(created_on__year=year, created_on__month=month)
+    return render_to_response("blog/index.html", dict(post_list=posts, user=request.user,
+                                                months=mkmonth_lst(), archive=True))

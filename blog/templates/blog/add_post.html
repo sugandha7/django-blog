@@ -1,5 +1,6 @@
 <h2>Hello {{ user.username }}</h2>
 <br />
+<a href="{% url 'blog' %}">Home</a>
 <h2>Add new post</h2>
 <form action="" method="POST">
     {% csrf_token %}
