@@ -1,2 +1,3 @@
-# django-blog
-A blog website developed with Django.
+django-blog
+-
+A blog developed with Django.
