@@ -47,7 +47,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'blog',
     'gunicorn',
-    'django_markdown'
+    'django_markdown',
 )
 
 MIDDLEWARE_CLASSES = (
