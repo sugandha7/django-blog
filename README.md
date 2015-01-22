@@ -1,2 +1,2 @@
 # django-blog
-A blog website developed with Django.
+A simple blog developed with Django 1.7. [https://sheltered-oasis-6673.herokuapp.com/blog/](https://sheltered-oasis-6673.herokuapp.com/blog/)
