@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
-#DATABASES['default'] =  dj_database_url.config()
+
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -21,15 +21,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'k@%r38ivoq!85^+9(x)&y0+3p(*mizjd_-cztf*6irs*x-#g-*'
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = 'k@%r38ivoq!85^+9(x)&y0+3p(*mizjd_-cztf*6irs*x-#g12'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-#DEBUG = False
 
-#TEMPLATE_DEBUG = True
-TEMPLATE_DEBUG = False
+TEMPLATE_DEBUG = True
+
+#Add the path to your templates directory here.
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'blog/templates')
 TEMPLATE_DIRS = [TEMPLATE_PATH,]
 
@@ -59,42 +59,30 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
-
+#Add the path to your urls.py here.
 ROOT_URLCONF = 'qblog.urls'
 
+#Add the path to your wsgi.py here.
 WSGI_APPLICATION = 'qblog.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
-#}
+# Parse database configuration from $DATABASE_URL
+import dj_database_url
 DATABASES = {'default' : dj_database_url.config() }
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#        'NAME': 'postgres',
-#        'USER': 'sugandha',
-#        'PASSWORD': 'sugu',
-#        'HOST': '',
-#        'PORT': '',
-#    }
-#}
 
-#DATABASE_PORT = '5433'
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.7/topics/i18n/
-
+# Language code for this installation. All choices can be found here:
+# http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# Local time zone for this installation. Choices can be found here:
+# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+# although not all choices may be avilable on all operating systems.
+# If running in a Windows environment this must be set to the same as your
+# system time zone.
+TIME_ZONE = 'Asia/Kolkata'
 
+# If you set this to False, Django will make some optimizations so as not
+# to load the internationalization machinery.
 USE_I18N = True
 
 USE_L10N = True
@@ -102,11 +90,14 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_PATH = os.path.join(BASE_DIR,'blog/static')
+# URL that handles the media served from STATIC_ROOT. Make sure to use a
+# trailing slash if there is a path component (optional in other cases).
+# Examples: "http://media.lawrence.com", "http://example.com/static/"
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+#Add the path to your static files (css, javascript, html) here.
+STATIC_PATH = os.path.join(BASE_DIR,'blog/static')
 STATICFILES_DIRS = (
     STATIC_PATH,
 )
