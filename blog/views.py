@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from models import Post, Comment
 from forms import PostForm, CommentForm
+from config_vars import num_of_pages
 
 def home(request):
     # Query the database for a list of ALL posts currently stored.
@@ -18,7 +19,7 @@ def home(request):
     # Retrieve the top 5 only - or all if less than 5.
     # Place the list in our context_dict dictionary which will be passed to the template engine.
     post_list = Post.objects.order_by('-created_on')
-    paginator = Paginator(post_list, 2)
+    paginator = Paginator(post_list, num_of_pages)
 
     try: page = int(request.GET.get("page", '1'))
     except ValueError: page = 1

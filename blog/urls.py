@@ -1,6 +1,8 @@
 from django.conf.urls import patterns, url, include
 from models import Post
 from blog.views import  PostWeekArchiveView
+from blog import  feed
+
 
 urlpatterns = patterns('',
     url(r'^post/(?P<slug>[-\w]+)$', 
@@ -24,4 +26,5 @@ urlpatterns = patterns('',
     url(r'^delete_comment/(?P<slug>[-\w]+)$', 
         'blog.views.delete_comment',
         name='blog_delete_all_comments'),
+    url(r'^feed/$', feed.LatestPosts(), name="feed"),
 )

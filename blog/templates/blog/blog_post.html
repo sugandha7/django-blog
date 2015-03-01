@@ -7,7 +7,7 @@
 <a href="{% url 'blog' %}">Home</a>
 <div class="title"><h2>{{ post.title }}</h2></div>
                 <ul>
-                    <div class="time" style="font-size:10px">{{ post.created_on}}</div>
+                    <div style="font-size:10px">{{ post.created_on}} | Tagged under {{ post.tags.all|join:", " }}</div>
                     <div class="body">{{ post.text|markdown }}</div>
                 </ul>
                 {% if post.comment_set.all %}
